@@ -67,36 +67,55 @@
         </div>
     </nav>
     <section>
+          <div class="container" style="background-color:pink; height: 1000px">
+      <div class="row">
+        <div class="col-sm-2">
+          <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'blog:django' %}">Django学习笔记</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'pystock:code' %}">Linux学习笔记</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'pystock:all_yield' %}">Python学习笔记</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled">最新文章</a>
+      </li>
+    </ul>
+        </div>
+        <div class="col-sm-10" style="height: 1000px; background-color: blanchedalmond;">
+            {% block body_stock %}
+                <ul>
+                    <li><a href="{% url 'blog:django_return_arg' %}">Django的参数传递的几种方式</a></li>
+                    <li><a href="#">python常见的技巧</a></li>
+                </ul>
+
+
+            {% endblock %}
+        </div>
+
+      </div>
+</div>
         {% block body %}
 
 
-        <div class="container">
-            <h2>git常用命令</h2>
-            <div>
-                <ol>
-                    <li>git add. 将当前文件下的内容添加到暂存区</li>
-                    <li>git commit -m "第一次修改文件"</li>
-                    <li>git push origin master  # 推送到GitHub</li>
-                    <li>git fetch</li>
-                    <li>执行 git fetch origin master 时，它的意思是从名为 origin 的远程上拉取名为 master 的分支到本地分支 origin/master 中。既然是拉取代码，当然需要同时指定远程名与分支名，所以分开写</li>
-                    <li>执行 git merge origin/master 时，它的意思是合并名为 origin/master 的分支到当前所在分支。既然是分支的合并，当然就与远程名没有直接的关系，所以没有出现远程名。需要指定的是被合并的分支</li>
-                    <li>执行 git push origin master 时，它的意思是推送本地的 master 分支到远程 origin，涉及到远程以及分支，当然也得分开写了。</li>
-                </ol>
-            </div>
-            <h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p><h2>最新文章</h2>
-            <p>这里是最新的博客文章内容...</p>
-            </div>
+{#        <div class="container">#}
+{#            <h2>git常用命令</h2>#}
+{#            <div>#}
+{#                <ol>#}
+{#                    <li>git add. 将当前文件下的内容添加到暂存区</li>#}
+{#                    <li>git commit -m "第一次修改文件"</li>#}
+{#                    <li>git push origin master  # 推送到GitHub</li>#}
+{#                    <li>git fetch</li>#}
+{#                    <li>执行 git fetch origin master 时，它的意思是从名为 origin 的远程上拉取名为 master 的分支到本地分支 origin/master 中。既然是拉取代码，当然需要同时指定远程名与分支名，所以分开写</li>#}
+{#                    <li>执行 git merge origin/master 时，它的意思是合并名为 origin/master 的分支到当前所在分支。既然是分支的合并，当然就与远程名没有直接的关系，所以没有出现远程名。需要指定的是被合并的分支</li>#}
+{#                    <li>执行 git push origin master 时，它的意思是推送本地的 master 分支到远程 origin，涉及到远程以及分支，当然也得分开写了。</li>#}
+{#                </ol>#}
+{#            </div>#}
+{#            #}
+{#            </div>#}
 
         {% endblock %}
 
