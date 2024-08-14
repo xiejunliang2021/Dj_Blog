@@ -1,8 +1,9 @@
 {% extends 'index.html' %}
 
 
-{% block body %}
-    <div class="container" style="background-color:pink; height: 1000px">
+{% block second_nav %}
+
+        <div class="container" style="background-color:pink; height: 1000px">
       <div class="row">
         <div class="col-sm-2">
           <ul class="nav flex-column">
@@ -20,6 +21,11 @@
       </li>
     </ul>
         </div>
+{% endblock %}
+
+
+{% block body %}
+
         <div class="col-sm-10" style="height: 1000px; background-color: blanchedalmond;">
             {% block body_stock %}
                 <img src="https://p4.itc.cn/q_70/images01/20210922/ea94560d08f0401792c7f1eb3c90ef1c.jpeg" alt="">
