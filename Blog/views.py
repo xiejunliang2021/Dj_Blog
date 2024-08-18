@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import *
 
 
 def index(request):
@@ -17,8 +18,10 @@ def django_return_arg(request):
 
 
 def django_test_blog(request):
+    info = TestBlog.objects.all()
+    dict_data = {'data': list(info)}
 
-    return render(request, 'test_blog.html')
+    return render(request, 'test_blog.html', dict_data)
 
 
 def django_test_add(request):

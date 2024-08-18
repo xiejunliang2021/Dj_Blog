@@ -21,11 +21,18 @@
 
 
 {% block body %}
+    {% load static %}
+        <div>你需要查询的数据为
+        {% for dt in data %}
+            <ul>
+                <li>dt.age--{{ dt.age }}</li>
+                <li>dt.info--{{ dt.info }}</li>
+                <li>img-- {% static dt.img1 %}</li>
+                <li>img-- {{ dt.img1 }}</li>
+                <li><img src="/{{ dt.img1 }}" alt="图片" style="width: 600px; height:500px"></li>
+            </ul>
+        {% endfor %}
 
-
-        <div>你需要查询的数据为</div>
-        <div>你需要查询的数据为</div>
-
-
+        </div>
 
 {% endblock %}
