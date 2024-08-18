@@ -67,11 +67,13 @@
         </div>
     </nav>
      <section>
-    {% block second_nav %}
+
         <div class="container" style="background-color:pink; height: 1000px">
           <div class="row">
             <div class="col-sm-2">
+                {% block second_nav %}
               <ul class="nav flex-column">
+
           <li class="nav-item">
             <a class="nav-link active" href="{% url 'blog:django' %}">Django学习笔记</a>
           </li>
@@ -85,11 +87,12 @@
             <a class="nav-link disabled">最新文章</a>
           </li>
         </ul>
+                {% endblock %}
     </div>
-    {% endblock %}
+
 
         <div class="col-sm-10" style="height: 1000px; background-color: blanchedalmond;">
-            {% block body_stock %}
+            {% block body %}
                 <ul>
                     <li><a href="{% url 'blog:django_return_arg' %}">Django的参数传递的几种方式</a></li>
                     <li><a href="#">python常见的技巧</a></li>
@@ -101,7 +104,7 @@
 
       </div>
 </div>
-        {% block body %}
+
 
 
 {#        <div class="container">#}
@@ -120,7 +123,7 @@
 {#            #}
 {#            </div>#}
 
-        {% endblock %}
+
 
     </section>
     <footer>
