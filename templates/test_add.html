@@ -2,17 +2,7 @@
 
 {% block body %}
     <div>
-<<<<<<< HEAD
-        <h3>你需要添加的数据</h3>
-        <form method="post" action="/blog/add/">
-            {% csrf_token %}
-            <input type="text" name="username" placeholder="用户名">
-            <input type="text" name="password" placeholder="密码">
-            <input type="submit" value="提交">
 
-        </form>
-    
-=======
     <h3>添加数据</h3>
         {#  下面代码中的action如果不写，默认是向当前页面的URL提交post请求，在下面的代码中就可以省略不写  #}
         <form method="post">
@@ -27,7 +17,7 @@
 
 
 
->>>>>>> bda9a661353be63ec330624b005d0478fe0724d2
+
     </div>
 {% endblock %}
 
