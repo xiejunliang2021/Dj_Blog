@@ -11,6 +11,7 @@ urlpatterns = [
     path('del/', django_test_del, name='django_del'),
     path('update/', django_test_update, name='django_update'),
     path('find/', django_test_find, name='django_find'),
+    path('user_info/', user_info, name='user_info'),
 ]
 
 

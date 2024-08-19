@@ -27,12 +27,12 @@
             <ul>
                 <li>dt.age--{{ dt.age }}</li>
                 <li>dt.info--{{ dt.info }}</li>
-                <li>img-- {% static dt.img1 %}</li>
-                <li>img-- {{ dt.img1 }}</li>
-                <li><img src="/{{ dt.img1 }}" alt="图片" style="width: 600px; height:500px"></li>
+                <li>/{{ dt.img1 }}</li>
+                <li><img src="/{{ dt.img1 }}" alt="图片不见了" style="width: 600px; height:500px"></li>
             </ul>
         {% endfor %}
-
+            <img src="{% static 'I:\dj_blog\Dj_Blog\static\images\p1.jpg' %}" alt="waibu">
+         {{ info }}
         </div>
 
 {% endblock %}

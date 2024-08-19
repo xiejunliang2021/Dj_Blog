@@ -1,7 +1,17 @@
 {% extends 'test_blog.html' %}
 
 {% block body %}
-    <div>你需要添加的数据</div>
+    <div>
+        <h3>你需要添加的数据</h3>
+        <form method="post" action="/blog/add/">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="用户名">
+            <input type="text" name="password" placeholder="密码">
+            <input type="submit" value="提交">
+
+        </form>
+    
+    </div>
 {% endblock %}
 
 
