@@ -6,8 +6,9 @@
       <thead>
     <tr>
         <th scope="col">用户ID</th>
-      <th scope="col">用户名</th>
-      <th scope="col">密码</th>
+        <th scope="col">用户名</th>
+        <th scope="col">密码</th>
+        <th scope="col">操作</th>
     </tr>
   </thead>
     {% for dt in data %}
@@ -16,6 +17,11 @@
       <th scope="row">{{ dt.id }}</th>
       <td>{{ dt.username }}</td>
       <td>{{ dt.password }}</td>
+        <td>
+{#            <a href="/blog/del/?nid={{ dt.id }}">删除</a>#}
+            <a href="{% url 'blog:django_del' nid=dt.id %}">删除</a>
+            <a href="{% url 'blog:update_user' nid=dt.id %}">编辑</a>
+        </td>
     </tr>
 
   </tbody>

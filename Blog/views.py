@@ -27,29 +27,14 @@ def django_test_blog(request):
     # return render(request, 'test_blog.html', {'info': info})
 
 
-def django_test_add(request):
-    if request.method == 'GET':
-        return render(request, 'test_add.html')
-    # 在这里获取数据的时候，后面的名字要和前端传过来的名字一样，否则报错
-    username = request.POST.get('username')
-    password = request.POST.get('password')
-    # print(username, password)
-    User.objects.create(username=username, password=password)
-    return redirect('/blog/user_info/')
-
-
 def user_info(request):
     user_data = User.objects.all()
     return render(request, 'user_info.html', {'data': user_data})
 
-    # dict_data = {'data': info}
-
-    return render(request, 'test_blog.html', {'data': info})
-
 
 def django_test_add(request):
     # 当用户以GET方式访问的时候，展示给用户的是form表单，让用户来添加数据，
-    if request.method == 'GET':       # 注意这里的GET的写法，全部大写
+    if request.method == 'GET':  # 注意这里的GET的写法，全部大写
         return render(request, 'test_add.html')
 
     # 当用户添加了数据以后，点击提交以后数据会以POST的方式提交回来，我们进行接收，并进行创建
@@ -57,16 +42,25 @@ def django_test_add(request):
     password = request.POST.get('password')
     User.objects.create(username=username, password=password)
 
-    return redirect('/blog/user_info/')
+    return redirect('blog:user_info')
 
 
+def django_test_del(request, nid):
 
-def django_test_del(request):
-    return render(request, 'test_del.html')
+    User.objects.filter(id=nid).delete()
+
+    # 注意这里不能用render，应该用redirect,用redirect的时候后面不能有request
+    return redirect('blog:user_info')
 
 
-def django_test_update(request):
-    return render(request, 'test_update.html')
+def update_user(request, nid):
+    if request.method == "GET":
+        data = User.objects.filter(id=nid).first()
+        return render(request, 'update_user.html', {"data": data})
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    User.objects.filter(id=nid).update(username=username, password=password)
+    return redirect('blog:user_info')
 
 
 def django_test_find(request):

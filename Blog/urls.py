@@ -8,8 +8,8 @@ urlpatterns = [
     path('django/', django_link, name='django'),
     path('test/', django_test_blog, name='django_test'),
     path('add/', django_test_add, name='django_add'),
-    path('del/', django_test_del, name='django_del'),
-    path('update/', django_test_update, name='django_update'),
+    path('del/<int:nid>', django_test_del, name='django_del'),
+    path('update/<int:nid>/user/', update_user, name='update_user'),
     path('find/', django_test_find, name='django_find'),
     path('user_info/', user_info, name='user_info'),
 ]

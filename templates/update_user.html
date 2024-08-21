@@ -1,0 +1,16 @@
+{% extends 'test_blog.html' %}
+
+{% block body %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <label>
+                <input type="text" name="username" value="{{ data.username }}">
+                <input type="text" name="password" value="{{ data.password }}">
+                <input type="submit" value="提 交">
+            </label>
+        </form>
+
+
+    </div>
+{% endblock %}
