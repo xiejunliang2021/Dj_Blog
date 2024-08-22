@@ -15,10 +15,19 @@ class StockCode(models.Model):
 
 class HistoryPrice(models.Model):
     ts_code = models.ForeignKey(to=StockCode, to_field='ts_code', on_delete=models.CASCADE)
+    trade_date = models.CharField(verbose_name='交易日期', max_length=16)
     open = models.DecimalField(verbose_name='开盘价', max_digits=6, decimal_places=2)
     close = models.DecimalField(verbose_name='收盘价', max_digits=6, decimal_places=2)
     high = models.DecimalField(verbose_name='最高价', max_digits=6, decimal_places=2)
     low = models.DecimalField(verbose_name='最低价', max_digits=6, decimal_places=2)
+    pre_close = models.DecimalField(verbose_name='昨日收盘价', max_digits=6, decimal_places=2)
+    change = models.DecimalField(verbose_name='涨跌额', max_digits=5, decimal_places=2)
+    pct_chg = models.DecimalField(verbose_name='涨跌幅', max_digits=6, decimal_places=2)
+    vol = models.DecimalField(verbose_name='成交量', max_digits=15, decimal_places=2)
+    amount = models.DecimalField(verbose_name='成交额', max_digits=15, decimal_places=2)
+
+
+
 
 
 

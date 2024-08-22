@@ -1,0 +1,50 @@
+{% extends 'pystock_index.html' %}
+
+{% block body %}
+	<h3>股票代码</h3>
+    <ul>
+
+    </ul>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">股票代码</th>
+      <th scope="col">股票名称</th>
+      <th scope="col">上市时间</th>
+      <th scope="col">行   业</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+        <tr>
+          <th scope="row">{{ item.ts_code }}</th>
+          <td>{{ item.name }}</td>
+          <td>{{ item.list_date }}</td>
+          <td>{{ item.industry }}</td>
+        </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if items.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ items.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ items.number }} of {{ items.paginator.num_pages }}.
+            </span>
+
+            {% if items.has_next %}
+                <a href="?page={{ items.next_page_number }}">next</a>
+                <a href="?page={{ items.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
+
+
+
+
