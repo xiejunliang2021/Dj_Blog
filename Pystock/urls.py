@@ -9,6 +9,7 @@ urlpatterns = [
     path('all_yield/', py_all_yield, name='all_yield'),
     path('code_info/', code_list, name='code_info'),
     path('code_info_2/', code_list_2, name='code_info_2'),
+    path('stock_list/', stock_list, name='stock_list'),
 ]
 
 

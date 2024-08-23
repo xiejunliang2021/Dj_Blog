@@ -1,0 +1,49 @@
+{% extends 'pystock_index.html' %}
+
+{% block body %}
+    {% if stock_info %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>TS Code</th>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Area</th>
+                    <th>Industry</th>
+                    <th>Market</th>
+                    <th>List Status</th>
+                    <th>List Date</th>
+                    <th>Is HS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in stock_info %}
+                <tr>
+                    <td>{{ stock.ts_code }}</td>
+                    <td>{{ stock.symbol }}</td>
+                    <td>{{ stock.name }}</td>
+                    <td>{{ stock.area }}</td>
+                    <td>{{ stock.industry }}</td>
+                    <td>{{ stock.market }}</td>
+                    <td>{{ stock.list_status }}</td>
+                    <td>{{ stock.list_date }}</td>
+                    <td>{{ stock.is_hs }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+            <h3>你的查询数据不存在或者输入有误，请你检查后进行搜索</h3>
+
+    {% endif %}
+
+
+
+
+
+
+
+{% endblock %}
+
+
+

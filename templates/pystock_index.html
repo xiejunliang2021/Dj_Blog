@@ -2,19 +2,22 @@
 
 
 {% block second_nav %}
-          <ul class="nav flex-column">
-      <li class="nav-item">
-        <a class="nav-link active" href="{% url 'pystock:yield' %}">当前收益</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'pystock:code' %}">策略代码</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'pystock:all_yield' %}">总体收益</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled">量化首页</a>
-      </li>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'pystock:code_info_2' %}">股票代码</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'pystock:yield' %}">当前收益</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'pystock:code' %}">策略代码</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'pystock:all_yield' %}">总体收益</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled">量化首页</a>
+        </li>
     </ul>
 
 {% endblock %}

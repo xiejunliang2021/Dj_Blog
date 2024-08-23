@@ -3,6 +3,11 @@
 {% block body %}
 	<div class="container mt-4">
         <h2 class="mb-4">Stock List</h2>
+        <form method="get" action="{% url 'pystock:stock_list' %}">
+            <input type="text" name="q" placeholder="搜索股票" value="{{ query }}">
+            <button type="submit">搜索</button>
+        </form>
+
         <table class="table table-bordered">
             <thead>
                 <tr>
