@@ -84,7 +84,13 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '19861023Xjl_',
         'HOST': '168.138.5.55',
-        'PORT': '3306'
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'connect_timeout': 20,
+            'read_timeout': 60,
+            'write_timeout': 60,
+        },
     }
 }
 
