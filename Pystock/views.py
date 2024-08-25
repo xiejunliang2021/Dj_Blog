@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection
-from Pystock.models import CodeInfo, TestCode
+from Pystock.models import CodeInfo, TestCode, HistoryPrice
 import pandas as pd
 import tushare as ts
 
@@ -73,7 +73,8 @@ def add_history_price(request):
 
     pro = ts.pro_api()
     trade_date = request.POST.get('trade_date')
-    df = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low')
+    df = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low, '
+                                                 'pre_close, change, pct_chg, vol, amount')
     df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y%m%d')
 
     # 假设需要插入的 ts_code 已经在数据库中
@@ -90,7 +91,12 @@ def add_history_price(request):
                 'open': row['open'],
                 'close': row['close'],
                 'high': row['high'],
-                'low': row['low']
+                'low': row['low'],
+                'pre_close': row['pre_close'],
+                'change': row['change'],
+                'pct_chg': row['pct_chg'],
+                'vol': row['vol'],
+                'amount': row['amount']
             })
         else:
             # 如果 ts_code 不存在于 CodeInfo 中，可以选择记录日志或采取其他措施
@@ -103,8 +109,10 @@ def add_history_price(request):
             with connection.cursor() as cursor:
                 cursor.executemany(
                     '''
-                        INSERT IGNORE INTO TestCode (ts_code_id, trade_date, open, close, high, low)
-                        VALUES (%(ts_code)s, %(trade_date)s, %(open)s, %(close)s, %(high)s, %(low)s)
+                        INSERT IGNORE INTO HistoryPrice (ts_code_id, trade_date, `open`, `close`, `high`, `low`, pre_close, 
+                        `change`, pct_chg, vol, amount)
+                        VALUES (%(ts_code)s, %(trade_date)s, %(open)s, %(close)s, %(high)s, %(low)s, %(pre_close)s, 
+                        %(change)s, %(pct_chg)s, %(vol)s, %(amount)s)
                     ''',
                     batch
                 )
@@ -112,28 +120,12 @@ def add_history_price(request):
     return HttpResponse('数据写入成功')
 
 
+def history_price_list(request):
+    if request.method == 'GET':
 
-# def add_history_price(request):
-#     if request.method == "GET":
-#         return render(request, 'add_history_price.html')
-#
-#     pro = ts.pro_api()
-#     trade_date = request.POST.get('trade_date')
-#     df = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low')
-#     df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y%m%d')
-#     print(df)
-#     # 创建TestCode实例的列表
-#     test_code_instances = [
-#         TestCode(
-#             ts_code=CodeInfo.objects.get(ts_code=row['ts_code']),  # 假设CodeInfo中已经有这些ts_code
-#             trade_date=row['trade_date'],
-#             open=row['open'],
-#             close=row['close'],
-#             high=row['high'],
-#             low=row['low']
-#         )
-#         for _, row in df.iterrows()
-#     ]
-#     TestCode.objects.bulk_create(test_code_instances)
-#
-#     return HttpResponse('数据写入成功')
+        return render(request, 'history_price_info.html')
+
+    ts_code = request.POST.get('ts_code')
+    history_price_data = HistoryPrice.objects.filter(ts_code=ts_code)
+
+    return render(request, 'history_price_info.html', {'history_price_data': history_price_data})

@@ -10,7 +10,8 @@ urlpatterns = [
     path('code_info/', code_list, name='code_info'),
     path('code_info_2/', code_list_2, name='code_info_2'),
     path('stock_list/', stock_list, name='stock_list'),
-    path('add_historyprice/', add_history_price, name='history_price')
+    path('add_historyprice/', add_history_price, name='history_price_add'),
+    path('history_price_list/', history_price_list, name='history_price_list'),
 ]
 
 

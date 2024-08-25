@@ -16,7 +16,7 @@ class CodeInfo(models.Model):
 
 class HistoryPrice(models.Model):
     ts_code = models.ForeignKey(to=CodeInfo, to_field='ts_code', on_delete=models.CASCADE)
-    trade_date = models.CharField(verbose_name='交易日期', max_length=16, default=timezone.now)
+    trade_date = models.CharField(verbose_name='交易日期', max_length=32, default=timezone.now)
     open = models.DecimalField(verbose_name='开盘价', max_digits=6, decimal_places=2, default=0.01)
     close = models.DecimalField(verbose_name='收盘价', max_digits=6, decimal_places=2, default=0.01)
     high = models.DecimalField(verbose_name='最高价', max_digits=6, decimal_places=2, default=0.01)
@@ -26,6 +26,9 @@ class HistoryPrice(models.Model):
     pct_chg = models.DecimalField(verbose_name='涨跌幅', max_digits=6, decimal_places=2, default=0.01)
     vol = models.DecimalField(verbose_name='成交量', max_digits=15, decimal_places=2, default=0.01)
     amount = models.DecimalField(verbose_name='成交额', max_digits=15, decimal_places=2, default=0.01)
+
+    class Meta:
+        db_table = 'HistoryPrice'
 
 
 class TestCode(models.Model):
