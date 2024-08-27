@@ -2,8 +2,8 @@ from django.db import models
 
 
 class User(models.Model):
-    username = models.CharField('用户名', max_length=30, default='')
-    password = models.CharField('密码', max_length=50, default='')
+    username = models.CharField(verbose_name='用户名', max_length=30, default='')
+    password = models.CharField(verbose_name='密码', max_length=50, default='')
     create_date = models.DateTimeField('创建时间', auto_now_add=True)
     update_date = models.DateTimeField('更新时间', auto_now=True)
 

@@ -4,6 +4,9 @@
     <div>
 
     <h3>添加数据</h3>
+        <a class="btn btn-success" href="{% url 'blog:user_add_modelform' %}">
+            <span class="glyphicon-plus-sigh" aria-hidden="true"></span>ModelForm新建用户
+        </a>
         {#  下面代码中的action如果不写，默认是向当前页面的URL提交post请求，在下面的代码中就可以省略不写  #}
         <form method="post">
             {% csrf_token %}

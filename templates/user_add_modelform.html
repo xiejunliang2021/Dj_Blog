@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+
+{% block body %}
+    <form method="post">
+    {% csrf_token %}
+        {% for field in form %}
+            {#  前面的值是在创建类的时候的verbose_name的值，  #}
+            {{ field.label }}  :  {{ field }}
+            {{ field.errors }}
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 10px">提交</button>
+
+{#        第一种写法  #}
+    {#  前面的值是在创建类的时候的verbose_name的值，  #}
+{#        {{ form.username.label }}:{{ form.username }}#}
+{#        {{ form.password.label }}:{{ form.password }}#}
+    </form>
+{% endblock %}
+
+

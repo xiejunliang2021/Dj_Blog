@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.shortcuts import render, HttpResponse
-from .models import *
+from django import forms
+from Blog.models import *
 
 
 def index(request):
@@ -65,3 +66,64 @@ def update_user(request, nid):
 
 def django_test_find(request):
     return render(request, 'test_find.html')
+
+
+# modelform 实例
+class UserModelForm(forms.ModelForm):
+    # 新生成校验规则，如果字符数少于三个则报错
+    username = forms.CharField(min_length=3, label='用户名')
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        # 以下方法是每个字段进行添加
+        # widgets = {
+        #     'username': forms.TextInput(attrs={"class": "form-control"}),
+        #     'password': forms.PasswordInput(attrs={"class": "form-control"})
+        # }
+
+    # 以下方法是通过重写方法来添加
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # 循环找到插件，添加class:form-control
+        for name, field in self.fields.items():
+            field.widget.attrs = {"class": "form-control"}
+
+
+def user_add_modelform(request):
+    """ 添加用户，modelform 版本 """
+
+    if request.method == 'GET':
+
+        form = UserModelForm()
+
+        return render(request, 'user_add_modelform.html', {'form': form})
+
+    # 用户通过post方式提交，对数据进行校验
+    form = UserModelForm(data=request.POST)
+    # 如果校验成功
+    if form.is_valid():
+        # 将校验合法的数据存到数据库中
+        form.save()
+        # print(form.cleaned_data)
+        return redirect('blog:user_info')
+    # 如果校验失败
+    else:
+        print(form.errors)
+    return HttpResponse('chenggong')
+
+
+# chatgpt生成的方法
+def user_add_model_form(request):
+    """ 添加用户，modelform 版本 """
+    if request.method == 'POST':
+        form = UserModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # 重定向或其他逻辑
+            return redirect('blog:user_info')
+    else:
+        form = UserModelForm()
+
+    return render(request, 'user_add_modelform.html', {'form': form})
