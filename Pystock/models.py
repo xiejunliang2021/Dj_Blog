@@ -26,6 +26,8 @@ class HistoryPrice(models.Model):
     pct_chg = models.DecimalField(verbose_name='涨跌幅', max_digits=6, decimal_places=2, default=0.01)
     vol = models.DecimalField(verbose_name='成交量', max_digits=15, decimal_places=2, default=0.01)
     amount = models.DecimalField(verbose_name='成交额', max_digits=15, decimal_places=2, default=0.01)
+    up_limit = models.DecimalField(verbose_name='涨停价', max_digits=15, decimal_places=2, default=0.01)
+    down_limit = models.DecimalField(verbose_name='跌停价', max_digits=15, decimal_places=2, default=0.01)
 
     class Meta:
         db_table = 'HistoryPrice'

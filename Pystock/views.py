@@ -73,8 +73,10 @@ def add_history_price(request):
 
     pro = ts.pro_api()
     trade_date = request.POST.get('trade_date')
-    df = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low, '
+    df_limit = pro.stk_limit(trade_date=trade_date)
+    df_price = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low, '
                                                  'pre_close, change, pct_chg, vol, amount')
+    df = pd.merge(df_price, df_limit, on=['trade_date', 'ts_code'])
     df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y%m%d')
 
     # 假设需要插入的 ts_code 已经在数据库中
@@ -96,7 +98,9 @@ def add_history_price(request):
                 'change': row['change'],
                 'pct_chg': row['pct_chg'],
                 'vol': row['vol'],
-                'amount': row['amount']
+                'amount': row['amount'],
+                'up_limit': row['up_limit'],
+                'down_limit': row['down_limit']
             })
         else:
             # 如果 ts_code 不存在于 CodeInfo 中，可以选择记录日志或采取其他措施
@@ -110,9 +114,9 @@ def add_history_price(request):
                 cursor.executemany(
                     '''
                         INSERT IGNORE INTO HistoryPrice (ts_code_id, trade_date, `open`, `close`, `high`, `low`, pre_close, 
-                        `change`, pct_chg, vol, amount)
+                        `change`, pct_chg, vol, amount, up_limit, down_limit)
                         VALUES (%(ts_code)s, %(trade_date)s, %(open)s, %(close)s, %(high)s, %(low)s, %(pre_close)s, 
-                        %(change)s, %(pct_chg)s, %(vol)s, %(amount)s)
+                        %(change)s, %(pct_chg)s, %(vol)s, %(amount)s, %(up_limit)s, %(down_limit)s)
                     ''',
                     batch
                 )

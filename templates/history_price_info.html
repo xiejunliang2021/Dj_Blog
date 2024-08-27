@@ -24,6 +24,8 @@
         <th scope="col">涨跌幅</th>
         <th scope="col">成交量</th>
         <th scope="col">成交额</th>
+        <th scope="col">涨停价</th>
+        <th scope="col">跌停价</th>
     </tr>
   </thead>
     {% for dt in history_price_data %}
@@ -40,6 +42,8 @@
         <td>{{ dt.pct_chg }}</td>
         <td>{{ dt.vol }}</td>
         <td>{{ dt.amount }}</td>
+        <td>{{ dt.up_limit }}</td>
+        <td>{{ dt.down_limit }}</td>
         <td>
 {#            <a href="/blog/del/?nid={{ dt.id }}">删除</a>#}
             <a href="{% url 'blog:django_del' nid=dt.id %}">删除</a>
