@@ -12,6 +12,9 @@ urlpatterns = [
     path('stock_list/', stock_list, name='stock_list'),
     path('add_historyprice/', add_history_price, name='history_price_add'),
     path('history_price_list/', history_price_list, name='history_price_list'),
+    path('date_is_open_info/', is_open_info, name='is_open_info'),
+    path('add_trade_is_open/', add_trade_is_open, name='add_trade_is_open'),
+
 ]
 
 

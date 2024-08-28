@@ -12,8 +12,8 @@ urlpatterns = [
     path('update/<int:nid>/user/', update_user, name='update_user'),
     path('find/', django_test_find, name='django_find'),
     path('user_info/', user_info, name='user_info'),
-    path('user_add_modelfrom/', user_add_modelform, name='user_add_modelform'),
-    path('user_add_model_form/', user_add_model_form, name='user_add_model_form')
+    path('user_add_modelform/', user_add_modelform, name='user_add_modelform'),
+    path('user_add_model_form/', user_add_model_form, name='user_add_model_form'),
 ]
 
 

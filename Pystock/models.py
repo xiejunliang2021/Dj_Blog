@@ -45,6 +45,16 @@ class TestCode(models.Model):
         db_table = 'TestCode'
 
 
+class TradeIsOpen(models.Model):
+    exchange = models.CharField(verbose_name='交易所', max_length=16, default='')
+    cal_date = models.CharField(verbose_name='日历日期', max_length=32, default='')
+    is_open = models.CharField(verbose_name='是否交易', max_length=8, default='')
+    pretrade_date = models.CharField(verbose_name='上个交易日', max_length=32, default='')
+
+    class Meta:
+        db_table = 'TradeIsOpen'
+
+
 
 
 

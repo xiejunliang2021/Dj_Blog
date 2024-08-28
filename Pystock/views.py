@@ -1,28 +1,25 @@
-from django.shortcuts import render, HttpResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import connection
-from Pystock.models import CodeInfo, TestCode, HistoryPrice
 import pandas as pd
 import tushare as ts
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db import connection, transaction
+from django.shortcuts import render, HttpResponse, redirect
+
+from Pystock.models import CodeInfo, HistoryPrice, TradeIsOpen
 
 
 def index(request):
-
     return render(request, 'pystock_index.html')
 
 
 def py_yield(request):
-
     return render(request, 'pystock_yield.html')
 
 
 def py_code(request):
-
     return render(request, 'pystock_code.html')
 
 
 def py_all_yield(request):
-
     return render(request, 'pystock_all_yield.html')
 
 
@@ -75,7 +72,7 @@ def add_history_price(request):
     trade_date = request.POST.get('trade_date')
     df_limit = pro.stk_limit(trade_date=trade_date)
     df_price = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low, '
-                                                 'pre_close, change, pct_chg, vol, amount')
+                                                       'pre_close, change, pct_chg, vol, amount')
     df = pd.merge(df_price, df_limit, on=['trade_date', 'ts_code'])
     df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y%m%d')
 
@@ -126,10 +123,120 @@ def add_history_price(request):
 
 def history_price_list(request):
     if request.method == 'GET':
-
         return render(request, 'history_price_info.html')
 
     ts_code = request.POST.get('ts_code')
     history_price_data = HistoryPrice.objects.filter(ts_code=ts_code)
 
     return render(request, 'history_price_info.html', {'history_price_data': history_price_data})
+
+
+# 自己写的
+# def add_trade_is_open(request):
+#     if request.method == "GET":
+#         return render(request, 'add_history_price.html')
+#     start_trade_date = request.POST.get('start_trade_date')
+#     end_trade_date = request.POST.get('end_trade_date')
+#     pro = ts.pro_api()
+#     df = pro.trade_cal(exchange='', start_date=start_trade_date, end_date=end_trade_date)
+#     df['cal_date'] = pd.to_datetime(df['cal_date'], format='%Y%m%d')
+#     df['pretrade_date'] = pd.to_datetime(df['pretrade_date'], format='%Y%m%d')
+#
+#
+#     cal_date_dict = {date_is_open.cal_date: date_is_open for date_is_open in TradeIsOpen.objects.all()}
+#     # 准备插入的数据
+#     records = []
+#     for _, row in df.iterrows():
+#         cal_date = row('cal_date')
+#         if cal_date not in cal_date_dict:
+#             records.append(
+#                 {
+#                     'exchange': row['exchange'],
+#                     'cal_date': row['cal_date'],
+#                     'is_open': row['is_open'],
+#                     'pretrade_date': row['pretrade_date']
+#                 }
+#             )
+#
+#         else:
+#             print('errors')
+#
+#     if records:
+#         batch_size = 1000  # 定义每批次插入的数量
+#         for i in range(0, len(records), batch_size):
+#             batch = records[i:i + batch_size]
+#             with connection.cursor() as cursor:
+#                 cursor.executemany(
+#                     '''
+#                         INSERT IGNORE INTO TradeIsOpen (exchange, cal_date, is_open, pretrade_date)
+#                         VALUES (%(exchange)s, %(cal_date)s, %(is_open)s, %(pretrade_date)s)
+#                     ''',
+#                     batch
+#                 )
+#
+#     return HttpResponse('数据写入成功')
+
+
+# ChatGPT优化后的代码
+def add_trade_is_open(request):
+    if request.method == "GET":
+        return render(request, 'add_history_price.html')
+
+    start_trade_date = request.POST.get('start_trade_date')
+    end_trade_date = request.POST.get('end_trade_date')
+
+    pro = ts.pro_api()
+    df = pro.trade_cal(exchange='', start_date=start_trade_date, end_date=end_trade_date)
+    df['cal_date'] = pd.to_datetime(df['cal_date'], format='%Y%m%d')
+    df['pretrade_date'] = pd.to_datetime(df['pretrade_date'], format='%Y%m%d')
+
+    # 获取现有的 cal_date 集合
+    existing_cal_dates = set(TradeIsOpen.objects.filter(
+        cal_date__in=df['cal_date']
+    ).values_list('cal_date', flat=True))
+
+    # 准备插入的数据
+    records = [
+        {
+            'exchange': row['exchange'],
+            'cal_date': row['cal_date'],
+            'is_open': row['is_open'],
+            'pretrade_date': row['pretrade_date']
+        }
+        for _, row in df.iterrows() if row['cal_date'] not in existing_cal_dates
+    ]
+
+    # 使用事务进行批量插入
+    if records:
+        try:
+            with transaction.atomic():
+                batch_size = 1000  # 定义每批次插入的数量
+                for i in range(0, len(records), batch_size):
+                    batch = records[i:i + batch_size]
+                    with connection.cursor() as cursor:
+                        cursor.executemany(
+                            '''
+                            INSERT IGNORE INTO TradeIsOpen (exchange, cal_date, is_open, pretrade_date)
+                            VALUES (%(exchange)s, %(cal_date)s, %(is_open)s, %(pretrade_date)s)
+                            ''',
+                            batch
+                        )
+        except Exception as e:
+            # 错误处理和日志记录
+            print(f"Error occurred: {e}")
+            return render(request, 'add_history_price.html', {'error_message': 'Failed to add trade data'})
+
+    # 成功插入数据后的响应
+    return redirect('pystock:is_open_info')
+
+
+def is_open_info(request):
+    # order_by 后面的值加了一个“-”减号表示倒序
+    data = TradeIsOpen.objects.all().order_by('-cal_date')
+
+    # 设置每页显示的数据量
+    paginator = Paginator(data, 10)  # 每页显示 10 条记录
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'tradedate_is_open.html', {'data': page_obj})
