@@ -64,12 +64,87 @@ def stock_list(request):
     return render(request, 'stock_list.html', {'stock_info': stock_info})
 
 
+# def add_history_price(request):
+#     if request.method == "GET":
+#         return render(request, 'add_history_price.html')
+#
+#     pro = ts.pro_api()
+#     # 从页面获取post传递过来的数据
+#     trade_date = request.POST.get('trade_date')
+#     # 从数据库中获取对应的数据
+#     date_is_open = TradeIsOpen.objects.filter(cal_date=trade_date)
+#     print(date_is_open)
+#     # 判断今天是否开盘
+#     if date_is_open.cal_date == '0':
+#         return HttpResponse('今天不开盘')
+#     df_limit = pro.stk_limit(trade_date=trade_date)
+#     df_price = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low, '
+#                                                        'pre_close, change, pct_chg, vol, amount')
+#     df = pd.merge(df_price, df_limit, on=['trade_date', 'ts_code'])
+#     df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y%m%d')
+#
+#     # 假设需要插入的 ts_code 已经在数据库中
+#     code_info_dict = {code.ts_code: code for code in CodeInfo.objects.all()}
+#
+#     # 准备插入的数据
+#     records = []
+#     for _, row in df.iterrows():
+#         ts_code = row['ts_code']
+#         if ts_code in code_info_dict:
+#             records.append({
+#                 'ts_code': code_info_dict[ts_code].ts_code,  # 使用正确的字段名
+#                 'trade_date': row['trade_date'],
+#                 'open': row['open'],
+#                 'close': row['close'],
+#                 'high': row['high'],
+#                 'low': row['low'],
+#                 'pre_close': row['pre_close'],
+#                 'change': row['change'],
+#                 'pct_chg': row['pct_chg'],
+#                 'vol': row['vol'],
+#                 'amount': row['amount'],
+#                 'up_limit': row['up_limit'],
+#                 'down_limit': row['down_limit']
+#             })
+#         else:
+#             # 如果 ts_code 不存在于 CodeInfo 中，可以选择记录日志或采取其他措施
+#             print(f"Warning: ts_code '{ts_code}' not found in CodeInfo. Skipping this record.")
+#
+#     if records:
+#         batch_size = 1000  # 定义每批次插入的数量
+#         for i in range(0, len(records), batch_size):
+#             batch = records[i:i + batch_size]
+#             with connection.cursor() as cursor:
+#                 cursor.executemany(
+#                     '''
+#                         INSERT IGNORE INTO HistoryPrice (ts_code_id, trade_date, `open`, `close`, `high`, `low`, pre_close,
+#                         `change`, pct_chg, vol, amount, up_limit, down_limit)
+#                         VALUES (%(ts_code)s, %(trade_date)s, %(open)s, %(close)s, %(high)s, %(low)s, %(pre_close)s,
+#                         %(change)s, %(pct_chg)s, %(vol)s, %(amount)s, %(up_limit)s, %(down_limit)s)
+#                     ''',
+#                     batch
+#                 )
+#
+#     return HttpResponse('数据写入成功')
+
+# ChatGPT第二次优化的代码add_history_price
 def add_history_price(request):
     if request.method == "GET":
         return render(request, 'add_history_price.html')
 
     pro = ts.pro_api()
+    # 从页面获取post传递过来的数据
     trade_date = request.POST.get('trade_date')
+    if not trade_date:
+        return HttpResponse('请提供交易日期')
+
+    # 从数据库中获取对应的数据
+    date_is_open = TradeIsOpen.objects.filter(cal_date=pd.to_datetime(trade_date, format='%Y%m%d')).first()
+    print(date_is_open)
+    # 判断今天是否开盘
+    if date_is_open.is_open == '0':
+        return HttpResponse('今天不开盘')
+
     df_limit = pro.stk_limit(trade_date=trade_date)
     df_price = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low, '
                                                        'pre_close, change, pct_chg, vol, amount')
@@ -100,7 +175,6 @@ def add_history_price(request):
                 'down_limit': row['down_limit']
             })
         else:
-            # 如果 ts_code 不存在于 CodeInfo 中，可以选择记录日志或采取其他措施
             print(f"Warning: ts_code '{ts_code}' not found in CodeInfo. Skipping this record.")
 
     if records:
@@ -110,10 +184,10 @@ def add_history_price(request):
             with connection.cursor() as cursor:
                 cursor.executemany(
                     '''
-                        INSERT IGNORE INTO HistoryPrice (ts_code_id, trade_date, `open`, `close`, `high`, `low`, pre_close, 
-                        `change`, pct_chg, vol, amount, up_limit, down_limit)
-                        VALUES (%(ts_code)s, %(trade_date)s, %(open)s, %(close)s, %(high)s, %(low)s, %(pre_close)s, 
-                        %(change)s, %(pct_chg)s, %(vol)s, %(amount)s, %(up_limit)s, %(down_limit)s)
+                    INSERT IGNORE INTO HistoryPrice (ts_code_id, trade_date, `open`, `close`, `high`, `low`, pre_close, 
+                    `change`, pct_chg, vol, amount, up_limit, down_limit)
+                    VALUES (%(ts_code)s, %(trade_date)s, %(open)s, %(close)s, %(high)s, %(low)s, %(pre_close)s, 
+                    %(change)s, %(pct_chg)s, %(vol)s, %(amount)s, %(up_limit)s, %(down_limit)s)
                     ''',
                     batch
                 )
