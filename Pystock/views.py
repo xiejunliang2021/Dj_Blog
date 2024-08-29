@@ -3,6 +3,7 @@ import tushare as ts
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection, transaction
 from django.shortcuts import render, HttpResponse, redirect
+from datetime import datetime
 
 from Pystock.models import CodeInfo, HistoryPrice, TradeIsOpen
 
@@ -135,25 +136,28 @@ def add_history_price(request):
     pro = ts.pro_api()
     # 从页面获取post传递过来的数据
     trade_date = request.POST.get('trade_date')
+
     if not trade_date:
         return HttpResponse('请提供交易日期')
-    print(trade_date)
+
     # 从数据库中获取对应的数据
     date_is_open = TradeIsOpen.objects.filter(cal_date=trade_date).first()
-    print(date_is_open.is_open)
+
     # 判断今天是否开盘
     if date_is_open.is_open == '0':
         return HttpResponse('今天不开盘')
 
+    trade_date = datetime.strptime(trade_date, '%Y-%m-%d').strftime('%Y%m%d')
+
     df_limit = pro.stk_limit(trade_date=trade_date)
+
     df_price = pro.daily(trade_date=trade_date, fields='ts_code,trade_date, open, close, high, low, '
                                                        'pre_close, change, pct_chg, vol, amount')
     df = pd.merge(df_price, df_limit, on=['trade_date', 'ts_code'])
-    df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y%m%d')
+    df['trade_date'] = pd.to_datetime(df['trade_date'], format='%Y%m%d').dt.date
 
     # 假设需要插入的 ts_code 已经在数据库中
     code_info_dict = {code.ts_code: code for code in CodeInfo.objects.all()}
-
     # 准备插入的数据
     records = []
     for _, row in df.iterrows():
@@ -192,7 +196,8 @@ def add_history_price(request):
                     batch
                 )
 
-    return HttpResponse('数据写入成功')
+        return HttpResponse('数据写入成功')
+    return HttpResponse('数据没有正确获取，数据为空')
 
 
 def history_price_list(request):
