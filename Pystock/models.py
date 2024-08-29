@@ -16,7 +16,7 @@ class CodeInfo(models.Model):
 
 class HistoryPrice(models.Model):
     ts_code = models.ForeignKey(to=CodeInfo, to_field='ts_code', on_delete=models.CASCADE)
-    trade_date = models.CharField(verbose_name='交易日期', max_length=32, default=timezone.now)
+    trade_date = models.DateField(verbose_name='交易日期')
     open = models.DecimalField(verbose_name='开盘价', max_digits=6, decimal_places=2, default=0.01)
     close = models.DecimalField(verbose_name='收盘价', max_digits=6, decimal_places=2, default=0.01)
     high = models.DecimalField(verbose_name='最高价', max_digits=6, decimal_places=2, default=0.01)
@@ -47,9 +47,9 @@ class TestCode(models.Model):
 
 class TradeIsOpen(models.Model):
     exchange = models.CharField(verbose_name='交易所', max_length=16, default='')
-    cal_date = models.CharField(verbose_name='日历日期', max_length=32, default='')
+    cal_date = models.DateField(verbose_name='日历日期', max_length=32, default='')
     is_open = models.CharField(verbose_name='是否交易', max_length=8, default='')
-    pretrade_date = models.CharField(verbose_name='上个交易日', max_length=32, default='')
+    pretrade_date = models.DateField(verbose_name='上个交易日', max_length=32, default='')
 
     class Meta:
         db_table = 'TradeIsOpen'

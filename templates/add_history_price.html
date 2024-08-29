@@ -2,13 +2,18 @@
 
 {% block body %}
     <h3>添加股票历史数据</h3>
-    <form method="post">
+    <form class="mb-4" method="post">
         {% csrf_token %}
-        <label>
-            <input type="text" name="trade_date" placeholder="请输入要获取数据的时间">
+
+<!--            <input type="text" name="trade_date" placeholder="请输入要获取数据的时间">-->
+            <div class="col-md-4 mb-3">
+                <label for="startDate">开始日期</label>
+                <input type="date" class="form-control" id="startDate" name="trade_date">
+            </div>
             <button type="submit" class="btn btn-primary" style="margin-top: 10px">提交</button>
-        </label>
+
     </form>
+
 
     <h3>添加股票交易日历数据</h3>
     <form method="post" action="{% url 'pystock:add_trade_is_open' %}">

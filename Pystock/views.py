@@ -137,10 +137,10 @@ def add_history_price(request):
     trade_date = request.POST.get('trade_date')
     if not trade_date:
         return HttpResponse('请提供交易日期')
-
+    print(trade_date)
     # 从数据库中获取对应的数据
-    date_is_open = TradeIsOpen.objects.filter(cal_date=pd.to_datetime(trade_date, format='%Y%m%d')).first()
-    print(date_is_open)
+    date_is_open = TradeIsOpen.objects.filter(cal_date=trade_date).first()
+    print(date_is_open.is_open)
     # 判断今天是否开盘
     if date_is_open.is_open == '0':
         return HttpResponse('今天不开盘')

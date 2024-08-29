@@ -1,66 +1,99 @@
+
 {% extends 'pystock_index.html' %}
+{% load static %}
 
-{% block body %}
-	    <h3>股票历史数据信息查询</h3>
-    <form method="post">
-            {% csrf_token %}
-            <label>
-                <input type="text" name="ts_code" placeholder="请输入要查询股票数据的代码">
-                <input type="submit" value="提 交">
-            </label>
-        </form>
-
-     <table class="table">
-      <thead>
-    <tr>
-        <th scope="col">股票代码</th>
-        <th scope="col">日期</th>
-        <th scope="col">开盘价</th>
-        <th scope="col">收盘价</th>
-        <th scope="col">最高价</th>
-        <th scope="col">最低价</th>
-        <th scope="col">昨收价</th>
-        <th scope="col">涨跌额</th>
-        <th scope="col">涨跌幅</th>
-        <th scope="col">成交量</th>
-        <th scope="col">成交额</th>
-        <th scope="col">涨停价</th>
-        <th scope="col">跌停价</th>
-    </tr>
-  </thead>
-    {% for dt in history_price_data %}
-  <tbody>
-    <tr>
-      <th scope="row">{{ dt.ts_code_id }}</th>
-      <td>{{ dt.trade_date }}</td>
-        <td>{{ dt.open }}</td>
-        <td>{{ dt.close }}</td>
-        <td>{{ dt.high }}</td>
-        <td>{{ dt.low }}</td>
-        <td>{{ dt.pre_close }}</td>
-        <td>{{ dt.change }}</td>
-        <td>{{ dt.pct_chg }}</td>
-        <td>{{ dt.vol }}</td>
-        <td>{{ dt.amount }}</td>
-        <td>{{ dt.up_limit }}</td>
-        <td>{{ dt.down_limit }}</td>
-        <td>
-{#            <a href="/blog/del/?nid={{ dt.id }}">删除</a>#}
-            <a href="{% url 'blog:django_del' nid=dt.id %}">删除</a>
-            <a href="{% url 'blog:update_user' nid=dt.id %}">编辑</a>
-        </td>
-    </tr>
-
-  </tbody>
-
-
-    {% endfor %}
-
-</table>
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
 {% endblock %}
 
+{% block body %}
+<div class="container mt-4">
+    <h2 class="mb-4">股票历史数据信息查询</h2>
 
+    <form id="stockForm" class="mb-4" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="col-md-4 mb-3">
+                <label for="stockCode">股票代码</label>
+                <input type="text" class="form-control" id="stockCode" name="ts_code" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="startDate">开始日期</label>
+                <input type="date" class="form-control" id="startDate">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="endDate">结束日期</label>
+                <input type="date" class="form-control" id="endDate">
+            </div>
+        </div>
+        <button class="btn btn-primary" type="submit">查询</button>
+    </form>
 
+    <table id="stockTable" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>股票代码</th>
+                <th>日期</th>
+                <th>开盘价</th>
+                <th>收盘价</th>
+                <th>最高价</th>
+                <th>最低价</th>
+                <th>昨收价</th>
+                <th>涨跌额</th>
+                <th>涨跌幅</th>
+                <th>成交量</th>
+                <th>成交额</th>
+                <th>涨停价</th>
+                <th>跌停价</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dt in history_price_data %}
+            <tr>
+                <td>{{ dt.ts_code_id }}</td>
+                <td>{{ dt.trade_date|date:"Y-m-d" }}</td>
+                <td>{{ dt.open }}</td>
+                <td>{{ dt.close }}</td>
+                <td>{{ dt.high }}</td>
+                <td>{{ dt.low }}</td>
+                <td>{{ dt.pre_close }}</td>
+                <td>{{ dt.change }}</td>
+                <td>{{ dt.pct_chg }}</td>
+                <td>{{ dt.vol }}</td>
+                <td>{{ dt.amount }}</td>
+                <td>{{ dt.up_limit }}</td>
+                <td>{{ dt.down_limit }}</td>
+                <td>
+                    <a href="{% url 'blog:django_del' nid=dt.id %}" class="btn btn-sm btn-danger">删除</a>
+                    <a href="{% url 'blog:update_user' nid=dt.id %}" class="btn btn-sm btn-primary">编辑</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 
+<!--<script>-->
+<!--$(document).ready(function() {-->
+<!--    $('#stockTable').DataTable({-->
+<!--        "pageLength": 25,-->
+<!--        "order": [[ 1, "desc" ]],-->
+<!--        "language": {-->
+<!--            "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Chinese.json"-->
+<!--        }-->
+<!--    });-->
+
+<!--    $('#stockForm').submit(function(e) {-->
+<!--        e.preventDefault();-->
+<!--        // Here you would typically make an AJAX call to fetch data-->
+<!--        // based on the form inputs and update the table-->
+<!--        alert('查询功能将在后端实现');-->
+<!--    });-->
+<!--});-->
+<!--</script>-->
+{% endblock %}
 
 
