@@ -47,7 +47,7 @@
                 <th>成交额</th>
                 <th>涨停价</th>
                 <th>跌停价</th>
-                <th>操作</th>
+
             </tr>
         </thead>
         <tbody>
@@ -66,10 +66,7 @@
                 <td>{{ dt.amount }}</td>
                 <td>{{ dt.up_limit }}</td>
                 <td>{{ dt.down_limit }}</td>
-                <td>
-                    <a href="{% url 'blog:django_del' nid=dt.id %}" class="btn btn-sm btn-danger">删除</a>
-                    <a href="{% url 'blog:update_user' nid=dt.id %}" class="btn btn-sm btn-primary">编辑</a>
-                </td>
+
             </tr>
         {% endfor %}
         </tbody>
