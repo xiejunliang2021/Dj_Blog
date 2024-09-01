@@ -21,6 +21,7 @@ from Pystock.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', layout, name='layout'),
     path('blog/', include(('Blog.urls', 'Blog'), namespace='blog')),
     # include中的第二个参数是app的名称
     path('pystock/', include(('Pystock.urls', 'Pystock'), namespace='pystock')),

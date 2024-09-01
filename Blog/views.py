@@ -4,6 +4,11 @@ from django import forms
 from Blog.models import *
 
 
+def layout(request):
+
+    return render(request, 'index.html')
+
+
 def index(request):
     return render(request, 'index.html')
 
