@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.shortcuts import render, HttpResponse
 from django import forms
 from Blog.models import *
+from Dj_Blog.utils.bootstrap import BootstrapModelForm
 
 
 def layout(request):
@@ -74,9 +75,11 @@ def django_test_find(request):
 
 
 # modelform 实例
-class UserModelForm(forms.ModelForm):
+class UserModelForm(BootstrapModelForm):
     # 新生成校验规则，如果字符数少于三个则报错
-    username = forms.CharField(min_length=3, label='用户名')
+    password = forms.CharField(min_length=3,
+                               label='密码',
+                               widget=forms.PasswordInput(attrs={"class": "form-control"}))
 
     class Meta:
         model = User
@@ -87,13 +90,13 @@ class UserModelForm(forms.ModelForm):
         #     'password': forms.PasswordInput(attrs={"class": "form-control"})
         # }
 
-    # 以下方法是通过重写方法来添加
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # 循环找到插件，添加class:form-control
-        for name, field in self.fields.items():
-            field.widget.attrs = {"class": "form-control"}
+    # 以下方法是通过重写方法来添加, 优化之前的代码
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #
+    #     # 循环找到插件，添加class:form-control
+    #     for name, field in self.fields.items():
+    #         field.widget.attrs = {"class": "form-control"}
 
 
 def user_add_modelform(request):
