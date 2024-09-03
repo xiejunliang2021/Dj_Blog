@@ -15,6 +15,8 @@ urlpatterns = [
     path('user_add_modelform/', user_add_modelform, name='user_add_modelform'),
     path('user_add_model_form/', user_add_model_form, name='user_add_model_form'),
     path('admin_add/', admin_add, name='admin_add'),
+    path('admin_info/', admin_info, name='admin_info'),
+    path('admin/<int:nid>/delete/', admin_delete, name='admin_delete'),
 ]
 
 

@@ -1,12 +1,13 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.shortcuts import render, HttpResponse
+from django.core.exceptions import ValidationError
 from django import forms
 from Blog.models import *
 from Dj_Blog.utils.bootstrap import BootstrapModelForm
+from Dj_Blog.utils.encrypt import md5
 
 
 def layout(request):
-
     return render(request, 'index.html')
 
 
@@ -53,7 +54,6 @@ def django_test_add(request):
 
 
 def django_test_del(request, nid):
-
     User.objects.filter(id=nid).delete()
 
     # 注意这里不能用render，应该用redirect,用redirect的时候后面不能有request
@@ -103,7 +103,6 @@ def user_add_modelform(request):
     """ 添加用户，modelform 版本 """
 
     if request.method == 'GET':
-
         form = UserModelForm()
 
         return render(request, 'user_add_modelform.html', {'form': form})
@@ -137,16 +136,62 @@ def user_add_model_form(request):
     return render(request, 'user_add_modelform.html', {'form': form})
 
 
-class AdminModelForm(forms.ModelForm):
+class AdminModelForm(BootstrapModelForm):
+    # 自己定义的字段
     confirm_password = forms.CharField(label='确认密码', widget=forms.PasswordInput)
 
     class Meta:
         model = Admin
-        fields = ['username', 'password']
+        fields = ['username', 'password', 'confirm_password']
+        widgets = {
+            # 后面的参数就时当密码输入不一致以后刷新页面后会保留原来的数据
+            'password': forms.PasswordInput(render_value=True),
+
+        }
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+
+        return md5(password)
+
+    def clean_confirm_password(self):
+        # 在这里也可以获取cleaned_data
+        # print(self.cleaned_data)
+        pwd = self.cleaned_data.get('password')
+        # 由于执行顺序按照['username', 'password', 'confirm_password']，所以这时候我们拿到的字段password已经时MD5加密过的
+        confirm_pwd = md5(self.cleaned_data.get('confirm_password'))
+        # 当两次输入的密码不一致的时候，页面返回错误，将两次输入的密码的密文进行比较
+        if pwd != confirm_pwd:
+            raise ValidationError('两次密码不一致')
+
+        # return之后的数据将会保存到cleaned_data中，当执行form.save后将保存到数据库中
+        return md5(confirm_pwd)
 
 
 def admin_add(request):
     """ 添加管理员 """
-    form = AdminModelForm
-    if request.method == "GET":
-        return render(request, 'change.html', {'title': "新建管理员", 'form': form})
+    if request.method == 'POST':
+        form = AdminModelForm(request.POST)
+        if form.is_valid():
+            # 验证通过后里面的数据 form.cleaned_data
+            # print(form.cleaned_data)
+            form.save()
+            # 重定向或其他逻辑
+            return redirect('blog:admin_info')
+    else:
+        form = AdminModelForm()
+
+    return render(request, 'change.html', {'title': "新建管理员", 'form': form})
+
+
+def admin_info(request):
+    qyeryset = Admin.objects.all()
+    return render(request, 'admin_info.html', {'context': qyeryset})
+
+
+def admin_delete(request, nid):
+    """ 删除管理员 """
+
+    Admin.objects.filter(id=nid).delete()
+
+    return redirect('blog:admin_info')
