@@ -135,3 +135,18 @@ def user_add_model_form(request):
         form = UserModelForm()
 
     return render(request, 'user_add_modelform.html', {'form': form})
+
+
+class AdminModelForm(forms.ModelForm):
+    confirm_password = forms.CharField(label='确认密码', widget=forms.PasswordInput)
+
+    class Meta:
+        model = Admin
+        fields = ['username', 'password']
+
+
+def admin_add(request):
+    """ 添加管理员 """
+    form = AdminModelForm
+    if request.method == "GET":
+        return render(request, 'change.html', {'title': "新建管理员", 'form': form})
