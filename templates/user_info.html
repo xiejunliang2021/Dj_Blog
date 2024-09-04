@@ -1,4 +1,12 @@
 {% extends 'test_blog.html' %}
+{% block second_nav %}
+	<ul class="list-group">
+                <li class="list-group-item"><a href="{% url 'blog:django' %}">Django学习笔记</a></li>
+                <li class="list-group-item"><a href="{% url 'pystock:code' %}">Linux学习笔记</a></li>
+                <li class="list-group-item"><a href="{% url 'pystock:all_yield' %}">Python学习笔记</a></li>
+                <li class="list-group-item disabled">最新文章</li>
+            </ul>
+{% endblock %}
 
 {% block body %}
     <h3>USER用户信息查询</h3>

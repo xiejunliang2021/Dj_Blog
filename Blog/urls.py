@@ -17,6 +17,9 @@ urlpatterns = [
     path('admin_add/', admin_add, name='admin_add'),
     path('admin_info/', admin_info, name='admin_info'),
     path('admin/<int:nid>/delete/', admin_delete, name='admin_delete'),
+    path('admin/<int:nid>/edit/', admin_edit, name='admin_edit'),
+    path('admin/<int:nid>/reset/', admin_reset, name='admin_reset'),
+
 ]
 
 

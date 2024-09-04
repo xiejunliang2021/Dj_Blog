@@ -184,9 +184,15 @@ def admin_add(request):
     return render(request, 'change.html', {'title': "新建管理员", 'form': form})
 
 
+class AdminEditModelForm(BootstrapModelForm):
+    class Meta:
+        model = Admin
+        fields = ["username"]
+
+
 def admin_info(request):
-    qyeryset = Admin.objects.all()
-    return render(request, 'admin_info.html', {'context': qyeryset})
+    queryset = Admin.objects.all()
+    return render(request, 'admin_info.html', {'context': queryset})
 
 
 def admin_delete(request, nid):
@@ -195,3 +201,133 @@ def admin_delete(request, nid):
     Admin.objects.filter(id=nid).delete()
 
     return redirect('blog:admin_info')
+
+
+def admin_edit(request, nid):
+    """ 编辑管理员 """
+    row_obj = Admin.objects.filter(id=nid).first()
+    if not row_obj:
+        return HttpResponse("数据不存在")
+
+    title = '编辑管理员'
+    """ 当我们的编辑的form和添加的form所用的数据一致的时候，我们可以用同一个form，
+                如果不是，那么我们就要为我们的编辑页面重新编写一个form     """
+    if request.method == "GET":
+        # instance = row_obj  在编辑页面显示默认值
+        form = AdminEditModelForm(instance=row_obj)
+
+        return render(request, 'change.html', {"form": form, "title": title})
+
+    form = AdminEditModelForm(data=request.POST, instance=row_obj)
+    if form.is_valid():
+        form.save()
+
+        return redirect("blog:admin_info")
+
+    return render(request, 'change.html', {"form": form, "title": title})
+
+
+class AdminResetModelForm(BootstrapModelForm):
+    confirm_password = forms.CharField(label='确认密码')
+    old_password = forms.CharField(label='请输入原来的密码')
+
+    class Meta:
+        model = Admin
+        fields = ['old_password', 'password', 'confirm_password']
+
+    def clean_old_password(self):
+        """ 当输入的密码和数据库中的密码不一致的时候报错 """
+        if not Admin.objects.filter(id=self.instance.pk, password=md5(self.cleaned_data.get('old_password'))).exists():
+            raise ValidationError("请你输入正确的密码")
+
+    def clean_password(self):
+        """ cleaned_data 可以获取用户输入的数据 """
+        pwd = self.cleaned_data.get("password")
+        return md5(pwd)
+
+    def clean_confirm_password(self):
+        """
+        下面的写法是错误的，由于这时候获取的password已经是经过加密的，所以我们比较的经过加密后的字符串
+        pwd = self.cleaned_data.get("password")
+        confirm_pwd = self.cleaned_data.get("confirm_password")
+        if pwd == confirm_pwd:
+            return md5(confirm_pwd)
+        raise ValidationError('两次密码不一致')
+
+        """
+        pwd = self.cleaned_data.get("password")
+        confirm_pwd = self.cleaned_data.get("confirm_password")
+        if pwd != md5(confirm_pwd):
+            raise ValidationError("两次输入密码不一致")
+        return md5(confirm_pwd)
+
+
+def admin_reset(request, nid):
+    row_obj = Admin.objects.filter(id=nid).first()
+    if not row_obj:
+        return HttpResponse("数据不存在")
+    title = f"重置--> {row_obj.username} 密码"
+    """ 当我们的编辑的form和添加的form所用的数据一致的时候，我们可以用同一个form，
+                如果不是，那么我们就要为我们的编辑页面重新编写一个form     """
+    if request.method == "GET":
+        # instance = row_obj  在编辑页面显示默认值
+        form = AdminResetModelForm
+
+        return render(request, 'change.html', {"form": form, "title": title})
+
+    form = AdminResetModelForm(data=request.POST, instance=row_obj)
+
+    if form.is_valid():
+        form.save()
+
+        return redirect("blog:admin_info")
+
+    return render(request, 'change.html', {"form": form, "title": title})
+
+
+class LoginForms(forms.Form):
+    username = forms.CharField(
+        label='用户名',
+        widget=forms.TextInput
+    )
+    password = forms.CharField(
+        label="密码",
+        widget=forms.PasswordInput
+    )
+
+    def clean_password(self):
+
+        return md5(self.cleaned_data.get("password"))
+
+
+def login(request):
+
+    # 一定要记住下面的写法，很重要，从页面获取数据
+    form = LoginForms(data=request.POST)
+    if form.is_valid():
+        # 原始的写法，由于传入的是字典，我们就可以用下面的方式进行解包传递数据
+        # obj = Admin.objects.filter(username=form.cleaned_data.get("username"),
+        # password=form.cleaned_data.get("password"))
+        obj = Admin.objects.filter(**form.cleaned_data)
+        if obj.first():
+            request.session['info'] = {"id": obj.first().id, 'username': obj.first().username}
+            return redirect("blog:admin_info")
+        else:
+            # 主动添加错误，前面是field，后面是错误信息
+            form.add_error(field="password", error="用户名或密码错误")
+            return render(request, 'login.html', {"form": form})
+    return render(request, 'login.html', {"form": form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+

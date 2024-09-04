@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登陆</title>
+    <style>
+        body {
+            background-image: url(https://ts1.cn.mm.bing.net/th/id/R-C.8e5e293cae342149832fff96bb4c8caa?rik=dbonSUJuDVqx5A&riu=http%3a%2f%2fimg.mm4000.com%2ffile%2f8%2fd7%2f6527dce099.jpg%3fdown&ehk=E9%2bVucd%2fent1hsPcwHCre695jRwtoRQJzu1ymZuXJL0%3d&risl=&pid=ImgRaw&r=0);
+		    background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 100px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .social-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .social-login a {
+            display: inline-block;
+            margin: 0 5px;
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>登录</h1>
+        <form method="post">
+            {% csrf_token %}
+{#            <input type="text" id="username" placeholder="用户名/邮箱">#}
+{#            <input type="password" id="password" placeholder="密码">#}
+            <label>用户名</label>
+            {{ form.username }}
+            {{ form.username.errors.0 }}
+            <label>密码</label>
+            {{ form.password }}
+            {{ form.password.errors.0 }}
+            <label>
+                <input type="checkbox" id="remember-me"> 记住我
+            </label>
+            <div class="forgot-password">
+                <a href="#">忘记密码?</a>
+            </div>
+            <input type="submit" value="登  陆">
+        </form>
+        <div class="social-login">
+            <a href="#">使用微信登录</a>
+            <a href="#">使用QQ登录</a>
+            <a href="#">使用支付宝登录</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

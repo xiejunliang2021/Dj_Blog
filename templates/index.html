@@ -92,6 +92,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'blog:django_test' %}">测试</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'blog:admin_info' %}">管理员账户</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -144,14 +147,14 @@
     };
 
     const darkTheme = {
-        '--bg-color': '#333',
-        '--text-color': '#f4f4f4',
-        '--header-bg': '#555',
+        '--bg-color': '#f4f4f4',
+        '--text-color': '#333',
+        '--header-bg': '#333',
         '--header-text': '#fff',
-        '--footer-bg': '#444',
-        '--footer-text': '#f4f4f4',
-        '--toggle-bg': '#555',
-        '--toggle-text': '#f4f4f4'
+        '--footer-bg': 'cornflowerblue',
+        '--footer-text': '#fff',
+        '--toggle-bg': '#fff',
+        '--toggle-text': '#333'
     };
 
     let isLightTheme = true;
