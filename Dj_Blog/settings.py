@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Blog.middleware.auth.AuthMiddleware',
 ]
 
 ROOT_URLCONF = 'Dj_Blog.urls'

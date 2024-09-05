@@ -11,7 +11,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.shortcuts import render, redirect
 
 
-class AuthMidleware(MiddlewareMixin):
+class AuthMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         # 排除那些不需要登录就可以访问的页面
