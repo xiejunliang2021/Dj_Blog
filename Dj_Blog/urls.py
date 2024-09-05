@@ -26,4 +26,5 @@ urlpatterns = [
     # include中的第二个参数是app的名称
     path('pystock/', include(('Pystock.urls', 'Pystock'), namespace='pystock')),
     path('login/', login, name='login'),
+
 ]

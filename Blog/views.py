@@ -319,7 +319,8 @@ def login(request):
     return render(request, 'login.html', {"form": form})
 
 
-
+def test_ajax(request):
+    return render(request, 'test_ajax.html')
 
 
 

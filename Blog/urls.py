@@ -19,6 +19,7 @@ urlpatterns = [
     path('admin/<int:nid>/delete/', admin_delete, name='admin_delete'),
     path('admin/<int:nid>/edit/', admin_edit, name='admin_edit'),
     path('admin/<int:nid>/reset/', admin_reset, name='admin_reset'),
+    path('test_ajax/', test_ajax, name="test_ajax"),
 
 ]
 

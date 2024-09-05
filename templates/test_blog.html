@@ -3,17 +3,20 @@
 {% block second_nav %}
 
     <ul class="nav flex-column">
-          <li class="nav-item">
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'blog:test_ajax' %}">ajax测试</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link active" href="{% url 'blog:django_add' %}">增--add</a>
-          </li>
-          
-          <li class="nav-item">
+        </li>
+
+        <li class="nav-item">
             <a class="nav-link active" href="{% url 'blog:user_info' %}">用户信息表</a>
-          </li>
-          <li class="nav-item">
+        </li>
+        <li class="nav-item">
             <a class="nav-link disabled">查--find</a>
-          </li>
-    </ul>
+        </li>
+        </ul>
 
 {% endblock %}
 
@@ -29,7 +32,7 @@
                 <li><img src="/{{ dt.img1 }}" alt="图片不见了" style="width: 600px; height:500px"></li>
             </ul>
         {% endfor %}
-            <img src="{% static 'I:\dj_blog\Dj_Blog\static\images\p1.jpg' %}" alt="waibu">
+            <img src="{% static 'images\p1.jpg' %}" alt="waibu">
          {{ info }}
         </div>
 

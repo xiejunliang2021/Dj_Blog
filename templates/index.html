@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的个人博客</title>
     <!-- 引入 Bootstrap 样式 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-          integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-4.6.2-dist/css/bootstrap.min.css' %}">
 
     <style>
         :root {
@@ -128,10 +128,13 @@
     <p>&copy; 2024 我的博客</p>
 </footer>
 
-<!-- 引入 Bootstrap 的 JavaScript 插件 -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% block js %}
+
+	<!-- 引入 Bootstrap 的 JavaScript 插件 -->
+    <script src="{% static 'plugins/bootstrap-4.6.2-dist/js/jquery.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-4.6.2-dist/js/bootstrap.min.js' %}"></script>
+
+{% endblock %}
 
 <!-- 主题切换脚本 -->
 <script>
