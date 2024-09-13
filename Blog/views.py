@@ -1,5 +1,8 @@
+import json
+
 from django.shortcuts import render, HttpResponse, redirect
-from django.shortcuts import render, HttpResponse
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django import forms
 from Blog.models import *
@@ -296,12 +299,10 @@ class LoginForms(forms.Form):
     )
 
     def clean_password(self):
-
         return md5(self.cleaned_data.get("password"))
 
 
 def login(request):
-
     # 一定要记住下面的写法，很重要，从页面获取数据
     form = LoginForms(data=request.POST)
     if form.is_valid():
@@ -323,12 +324,16 @@ def test_ajax(request):
     return render(request, 'test_ajax.html')
 
 
-
-
-
-
-
-
-
-
-
+@csrf_exempt
+def res_ajax(request):
+    # 当用户通过ajax请求向这里发送了get请求后，我们可以通过下面的方法来接收数据
+    # name = request.GET['name']
+    # print(name)
+    # name = request.POST
+    # print(name)
+    # 将数据转化成json格式发送给前端页面， 由于这样写比较麻烦，Django自带了json转换的jsonresponse
+    # data_dict = {"status": True, 'list': [1, 2, 3, 4]}
+    # json_data = json.dumps(data_dict)
+    # return HttpResponse('welcome back！！！')
+    data_dict = request.POST
+    return JsonResponse(data_dict)

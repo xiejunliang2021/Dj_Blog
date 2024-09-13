@@ -60,6 +60,15 @@
             float: right;
             margin: 10px;
         }
+        .img-body {
+
+            background-image: url("{% static 'images/girl_02.jpeg' %}");
+            background-size: cover; /* 使背景图片覆盖整个页面 */
+            background-position: center; /* 背景图片居中 */
+            background-repeat: no-repeat; /* 防止背景图片重复 */
+            background-attachment: fixed; /* 使背景图片固定在视口 */
+            height: 100vh; /* 确保页面高度为视口高度 */
+        }
     </style>
 </head>
 <body>
@@ -100,7 +109,7 @@
     </div>
 </nav>
 
-<section class="container">
+<section class="container img-body">
     <div class="row">
         <div class="col-md-3">
             {% block second_nav %}
@@ -116,8 +125,10 @@
         <div class="col-md-9">
             {% block body %}
             <ul class="list-group">
+                <li class="list-group-item"><a href="https://docs.djangoproject.com/zh-hans/5.1/">Django的学习文档</a></li>
                 <li class="list-group-item"><a href="{% url 'blog:django_return_arg' %}">Django的参数传递的几种方式</a></li>
                 <li class="list-group-item"><a href="#">python常见的技巧</a></li>
+
             </ul>
             {% endblock %}
         </div>
@@ -126,15 +137,14 @@
 
 <footer>
     <p>&copy; 2024 我的博客</p>
+    <img src="{% static 'images/girl_01.jpeg' %}" alt="">
 </footer>
 
-{% block js %}
+<!-- 引入 Bootstrap 的 JavaScript 插件 -->
+<script src="{% static 'plugins/bootstrap-4.6.2-dist/js/jquery.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-4.6.2-dist/js/bootstrap.min.js' %}"></script>
 
-	<!-- 引入 Bootstrap 的 JavaScript 插件 -->
-    <script src="{% static 'plugins/bootstrap-4.6.2-dist/js/jquery.js' %}"></script>
-    <script src="{% static 'plugins/bootstrap-4.6.2-dist/js/bootstrap.min.js' %}"></script>
-
-{% endblock %}
+{% block js %}{% endblock %}
 
 <!-- 主题切换脚本 -->
 <script>

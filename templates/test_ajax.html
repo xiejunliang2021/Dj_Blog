@@ -1,20 +1,108 @@
 {% extends 'test_blog.html' %}
 
 {% block body %}
+    {% load static %}
     <div class="container">
-        <h3>ajax测试一</h3>
+        <h3>ajax测试一get</h3>
+        <input type="button" class="btn btn-success" value="点我发送ajax请求" onclick="clickMe();">
+    </div>
 
-        <input type="button" class="btn btn-success" value="点我发送ajax请求">
+    <div class="container">
+        <h3>ajax测试一post</h3>
+        <img src="https://img.saibo.us.kg/photo_2024-09-10 15.36.02.jpeg" alt="" style="width: 200px;height: 150px;">
+
+        <input type="button" class="btn btn-success" value="点我发送ajax请求" onclick="clickMePost();">
     </div>
 
     <div class="container">
         <h3>ajax测试二</h3>
+        <input type="button" class="btn btn-success" id="btn1" value="点我发送ajax请求">
+
     </div>
 
     <div class="container">
         <h3>ajax测试三</h3>
+        <input type="text" id="txtUser" placeholder="用户名">
+        <input type="text" id="txtAge" placeholder="年龄">
+        <input type="button" class="btn btn-primary" id="btn2" value="点击发送input框内容">
     </div>
 
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript">
+    {#  下面用的是jquery方法  #}
+    $(function () {
+        bindBtn2Event();
+
+    })
+    function bindBtn1Event() {
+         $("#btn1").click(function (){
+            $.ajax({
+                url:'{% url 'blog:res_ajax' %}',
+                type:'get',
+                data:{
+                    name:'xiejunliang',
+                    pwd:'998877'
+                },
+                {#数据加载成功后返回的值#}
+                success: function (res){
+                    console.log(res)
+                }
+            })
+        })
+    }
+
+    {#通过ajax直接将输入框中的数据进行传递到后台#}
+    function bindBtn2Event() {
+         $("#btn2").click(function (){
+            $.ajax({
+                url:'{% url 'blog:res_ajax' %}',
+                type:'post',
+                data:{
+                    name:$('#txtUser').val(),
+                    age: $('#txtAge').val()
+                },
+                {#数据加载成功后返回的值#}
+                success: function (res){
+                    console.log(res.name)
+                }
+            })
+        })
+    }
+    
+{#  下面函数的意思是当用户点击了ajax按钮后将向URL指向的地址发送data数据， 当完成后返回了目标URL地址返回的数据 #}
+        function clickMe() {
+            $.ajax({
+                url:'{% url 'blog:res_ajax' %}',
+                type:'get',
+                data:{
+                    name:'xiejunliang',
+                    pwd:'998877'
+                },
+                {#数据加载成功后返回的值#}
+                success: function (res){
+                    console.log(res)
+                }
+            })
+        }
+         {#当我们用下面的方法进行post请求的时候，会报csrf的错误，这时候我们可以让我们的函数免除csrf验证#}
+         function clickMePost() {
+            $.ajax({
+                url:'{% url 'blog:res_ajax' %}',
+                type:'post',
+                data:{
+                    name:'xiejunliang',
+                    pwd:'998877'
+                },
+                {#数据加载成功后返回的值#}
+                success: function (res){
+                    console.log(res.status)
+                }
+            })
+        }
+    </script>
 {% endblock %}
 
 

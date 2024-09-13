@@ -167,7 +167,7 @@ def history_price_list(request):
         return render(request, 'history_price_info.html')
 
     ts_code = request.POST.get('ts_code')
-    history_price_data = HistoryPrice.objects.filter(ts_code=ts_code)
+    history_price_data = HistoryPrice.objects.filter(ts_code=ts_code).order_by('trade_date')
 
     return render(request, 'history_price_info.html', {'history_price_data': history_price_data})
 
